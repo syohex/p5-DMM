@@ -9,7 +9,7 @@ use Web::Scraper;
 use utf8;
 
 use Class::Accessor::Lite (
-    rw => [ qw/name id birthday bloodtype hometown sign size interest/ ],
+    rw => [ qw/name aliases id birthday bloodtype hometown sign size interest/ ],
 );
 
 sub new {
