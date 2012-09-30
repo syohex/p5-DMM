@@ -11,9 +11,10 @@ my $dvd_ranking = DMM::Ranking->new('dvd');
 my $download_ranking = DMM::Ranking->new('download');
 
 my @actresses;
-@actresses = $dvd_ranking->actress_ranking(41, 60);
+my ($min, $max) = (41, 60);
+@actresses = $dvd_ranking->actress_ranking($min, $max);
 
-my $rank = 11;
+my $rank = $min;
 for my $actress (@actresses) {
     printf "[%2d] %s", $rank++, $actress->name;
     if (@{$actress->aliases}) {
