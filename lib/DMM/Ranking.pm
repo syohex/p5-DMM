@@ -71,7 +71,11 @@ sub actress_ranking {
         }
     }
 
-    return @actresses[($min-1)..($max-1)];
+    unless (@actresses) {
+        Carp::croak("Can't get any actress information");
+    }
+
+    return @actresses[0..($max - $min)];
 }
 
 sub _actress_ranking_url {
