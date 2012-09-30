@@ -7,6 +7,8 @@ use 5.010;
 use Carp ();
 use Web::Scraper;
 use URI;
+use DMM::Actress;
+use DMM::Util qw/separate_name/;
 
 sub new {
     my ($class, $media) = @_;
@@ -50,13 +52,26 @@ sub actress_ranking {
     $max //= 100;
 
     my $scraper = $scraper{ $self->{media} };
+
+    my @actresses;
     for my $url ( $self->_actress_ranking_url($min, $max) ) {
         my $res = $scraper->scrape( URI->new($url) );
 
         for my $rank (@{$res->{ranks}}) {
             my ($id) = $rank->{href} =~ m{id=(\d+)}g;
+            my ($name, $aliases_ref) = separate_name($rank->{name});
+
+            $aliases_ref //= [];
+
+            push @actresses, DMM::Actress->new(
+                name    => $name,
+                aliases => $aliases_ref,
+                id      => $rank->{id},
+            );
         }
     }
+
+    return @actresses[($min-1)..($max-1)];
 }
 
 sub _actress_ranking_url {
@@ -87,3 +102,51 @@ sub _actress_ranking_url {
 1;
 
 __END__
+
+=encoding utf-8
+
+=for stopwords
+
+=head1 NAME
+
+DMM::Ranking - DMM ranking module
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+DMM::Ranking is ranking module.
+You can get actress ranking or product ranking.
+
+=head1 INTERFACES
+
+=head2 Class Methods
+
+=head3 C<< DMM::Ranking->new($media) >>
+
+Create and return a new DMM::Ranking instance.
+C<$media> parameter should be 'dvd' or 'download'.
+
+=head2 Instance method
+
+=head3 C<< $ranking->actress_ranking($min=1, $max=100)  >>
+
+Get actresses ranked from C<$min> to C<$max>(C<$max> should be greater than C<$min>).
+Each object returned is-a DMM::Actress.
+
+=head1 AUTHOR
+
+Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2012 - Syohei YOSHIDA
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
