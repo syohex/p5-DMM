@@ -6,7 +6,7 @@ use DMM::Product;
 use utf8;
 
 subtest 'constructor' => sub {
-    my $product = DMM::Product->new( link => 'id=10' );
+    my $product = DMM::Product->new( link => 'cid=10' );
     ok $product, 'constructor';
     isa_ok $product, 'DMM::Product';
 };
@@ -14,7 +14,7 @@ subtest 'constructor' => sub {
 subtest 'accessor' => sub {
     my %params = (
         title        => 'title',
-        link         => '/id=1000/',
+        link         => '/cid=1000/',
         image        => 'a.jpg',
         package      => 'b.jpg',
         description  => 'too sexy',
