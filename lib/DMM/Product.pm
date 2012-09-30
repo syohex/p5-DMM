@@ -25,7 +25,7 @@ sub new {
     }
 
     my $id = do {
-        if ($args{link} =~ m{id=(\d+)}) {
+        if ($args{link} =~ m{cid=(\w+)}) {
             $1;
         } else {
             Carp::croak("Invalid link: link should have 'id' parameter");
