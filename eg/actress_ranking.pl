@@ -11,7 +11,7 @@ my $dvd_ranking = DMM::Ranking->new('dvd');
 my $download_ranking = DMM::Ranking->new('download');
 
 my @actresses;
-@actresses = $dvd_ranking->actress_ranking(11, 20);
+@actresses = $dvd_ranking->actress_ranking(41, 60);
 
 my $rank = 11;
 for my $actress (@actresses) {
