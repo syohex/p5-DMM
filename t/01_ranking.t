@@ -79,4 +79,12 @@ subtest 'invalid actress ranking url' => sub {
 
 };
 
+subtest 'actress ranking and return DMM::Actress objects' => sub {
+    my $ranking = DMM::Ranking->new('dvd');
+    my @actresses = $ranking->actress_ranking(41, 60);
+
+    is scalar @actresses, 20, 'number of objects returned';
+    isa_ok $actresses[0], 'DMM::Actress';
+};
+
 done_testing;
