@@ -152,3 +152,62 @@ sub _extract_a_tag {
 1;
 
 __END__
+
+=encoding utf-8
+
+=for stopwords
+
+=head1 NAME
+
+DMM::Product - Product in dmm.co.jp
+
+=head1 SYNOPSIS
+
+    use DMM::Product;
+
+    # Scraping product page and create instance from them
+    my $product = DMM::Product->create_from_id(
+        id    => 'Product ID in dmm.co.jp', # like '53dv1434'
+        media => 'dvd'
+    );
+
+    printf "%s (%d minutes)\n",  $product->title, $product->minute;
+
+=head1 DESCRIPTION
+
+DMM::Product is product object.
+
+=head1 INTERFACE
+
+=head2 Class Methods
+
+=head3 C<< DMM::Product->new(%args) :DMM::Product >>
+
+Creates and returns a new DMM::Product instance with I<%args>.
+
+=head3 C<< DMM::Product->create_from_id(id => ID, media => ('dvd' or 'download')) >>
+
+Scraping product page and creates DMM::Product instance with scraped information.
+
+=head2 Instance Methods
+
+=head3 C<< $product->set_information >>
+
+Scraping product page and extract detail information and set them.
+
+=head1 AUTHOR
+
+Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2012 - Syohei YOSHIDA
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

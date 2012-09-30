@@ -22,3 +22,6 @@ Syohei YOSHIDA
 syohex
 gmail
 DMM
+dmm
+co
+jp
