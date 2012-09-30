@@ -7,6 +7,7 @@ all_from 'lib/DMM.pm';
 
 requires 'XML::RSS::LibXML';
 requires 'LWP::UserAgent';
+requires 'Furl';
 requires 'Web::Scraper';
 requires 'URI';
 requires 'DateTime';
