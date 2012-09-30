@@ -61,3 +61,45 @@ sub parse {
 1;
 
 __END__
+
+=encoding utf-8
+
+=for stopwords
+
+=head1 NAME
+
+DMM::RSS - DMM RSS module
+
+=head1 SYNOPSIS
+
+    use DMM::RSS;
+
+    my $url = 'DMM RSS URL';
+    my $rss = DMM::RSS->new($url);
+
+    my @products = $rss->parse;
+    for my $product (@products) {
+        printf "Title: %s\n", $product->title;
+    }
+
+
+=head1 DESCRIPTION
+
+DMM::RSS parses RSS and extract products information from it.
+
+=head1 AUTHOR
+
+Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2012 - Syohei YOSHIDA
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
