@@ -76,3 +76,61 @@ sub collect_all_genres {
 1;
 
 __END__
+
+
+=encoding utf-8
+
+=for stopwords
+
+=head1 NAME
+
+DMM::Genre - DMM Genre module
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+DMM::Genre stands for genre in DMM.co.jp.
+
+=head1 INTERFACE
+
+=head2 Class Methods
+
+=head3 C<< DMM::Genre->new(%args) >>
+
+Create DMM::Genre instance and return it.
+I<%args> is:
+
+=over
+
+=item id(:Int)
+
+DMM genre ID. This value may be as number.
+
+=item name(:String)
+
+DMM genre name.
+
+=back
+
+=head3 C<< DMM::Genre->collect_all_genere($media) >>
+
+Collect all genres in DMM.co.jp and return DMM::Genre instances.
+C<$media> parameter should be 'dvd' or 'download'.
+
+=head1 AUTHOR
+
+Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2012 - Syohei YOSHIDA
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
