@@ -15,6 +15,8 @@ requires 'Class::Accessor::Lite' => '0.05';
 
 test_requires 'Test::More' => '0.98';
 
+tests 't/*.t t/*/*.t';
+
 author_tests('xt');
 auto_set_repository();
 WriteAll;
