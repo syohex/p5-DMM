@@ -44,7 +44,12 @@ my %ranking_scraper = (
         },
     },
 );
+# daily
 $ranking_scraper{download}->{daily} = $ranking_scraper{dvd}->{daily};
+
+# weekly
+$ranking_scraper{dvd}->{weekly}      = $ranking_scraper{dvd}->{daily};
+$ranking_scraper{download}->{weekly} = $ranking_scraper{dvd}->{daily};
 
 sub ranking {
     my ($self, $min, $max) = @_;
@@ -89,28 +94,16 @@ sub ranking {
     return @products[0..($max-$min)];
 }
 
-my %url_ = (
-    daily_sale => \&_daily_sale_url,
-    weekly_sale => \&_weekly_sale_url,
+my %urls_by_type = (
+    daily   => \&_daily_sale_url,
+    weekly  => \&_weekly_sale_url,
 );
 
 sub _ranking_url {
     my ($self, $min, $max) = @_;
-
     my ($min_page, $max_page) = map { ($_ - 1) / 20 } ($min, $max);
 
-    my @urls;
-    given ($self->{type}) {
-        when ('daily') {
-            @urls = $self->_daily_sale_url;
-        }
-        when ('weekly') {
-        }
-        when ('monthly') {
-        }
-    }
-
-    return @urls[$min_page..$max_page];
+    return $urls_by_type{$self->{type}}->($self);
 }
 
 sub _daily_sale_url {
@@ -120,7 +113,7 @@ sub _daily_sale_url {
     my $base = +{
         dvd      => 'http://www.dmm.co.jp/mono/dvd/-/ranking/=/term=daily/rank=%s/',
         download => 'http://www.dmm.co.jp/digital/videoa/-/ranking_all/=/term=daily/',
-    }->{ $media };
+    }->{$media};
 
     # DMM provides download daily ranking only 1 page
     return $base if $media eq 'download';
@@ -133,8 +126,20 @@ sub _daily_sale_url {
 }
 
 sub _weekly_sale_url {
-    my $media = shift;
+    my $self = shift;
+    my $media = $self->{media};
 
+    my $base = +{
+        dvd      => 'http://www.dmm.co.jp/mono/dvd/-/ranking/=/term=week/rank=%s/',
+        download => 'http://www.dmm.co.jp/digital/videoa/-/ranking_all/=/term=weekly/page=%d/',
+    }->{$media};
+
+    my $page_units = +{
+        dvd      => [qw/1_20 21_40 41_60 61_80 81_100/],
+        download => [1..5],
+    }->{$media};
+
+    return map { sprintf $base, $_ } @{$page_units};
 }
 
 1;
