@@ -51,6 +51,10 @@ $ranking_scraper{download}->{daily} = $ranking_scraper{dvd}->{daily};
 $ranking_scraper{dvd}->{weekly}      = $ranking_scraper{dvd}->{daily};
 $ranking_scraper{download}->{weekly} = $ranking_scraper{dvd}->{daily};
 
+# monthly
+$ranking_scraper{dvd}->{monthly}      = $ranking_scraper{dvd}->{daily};
+$ranking_scraper{download}->{monthly} = $ranking_scraper{dvd}->{daily};
+
 sub ranking {
     my ($self, $min, $max) = @_;
 
@@ -97,6 +101,7 @@ sub ranking {
 my %urls_by_type = (
     daily   => \&_daily_sale_url,
     weekly  => \&_weekly_sale_url,
+    monthly => \&_monthly_sale_url,
 );
 
 sub _ranking_url {
@@ -132,6 +137,23 @@ sub _weekly_sale_url {
     my $base = +{
         dvd      => 'http://www.dmm.co.jp/mono/dvd/-/ranking/=/term=week/rank=%s/',
         download => 'http://www.dmm.co.jp/digital/videoa/-/ranking_all/=/term=weekly/page=%d/',
+    }->{$media};
+
+    my $page_units = +{
+        dvd      => [qw/1_20 21_40 41_60 61_80 81_100/],
+        download => [1..5],
+    }->{$media};
+
+    return map { sprintf $base, $_ } @{$page_units};
+}
+
+sub _monthly_sale_url {
+    my $self = shift;
+    my $media = $self->{media};
+
+    my $base = +{
+        dvd      => 'http://www.dmm.co.jp/mono/dvd/-/ranking/=/term=monthly/rank=%s/',
+        download => 'http://www.dmm.co.jp/digital/videoa/-/ranking_all/=/page=%d/',
     }->{$media};
 
     my $page_units = +{

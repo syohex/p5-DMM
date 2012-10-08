@@ -63,4 +63,18 @@ subtest 'weekly download ranking' => sub {
     is ref $products[0], 'DMM::Product', 'class of products returned';
 };
 
+subtest 'monthly dvd ranking' => sub {
+    my $monthly_dvd = DMM::Ranking::Product->new(type => 'monthly', media => 'dvd');
+    my @products = $monthly_dvd->ranking(50, 70);
+    is scalar @products,  21, 'number of products';
+    is ref $products[0], 'DMM::Product', 'class of products returned';
+};
+
+subtest 'monthly download ranking' => sub {
+    my $monthly_download = DMM::Ranking::Product->new(type => 'monthly', media => 'download');
+    my @products = $monthly_download->ranking(10, 20);
+    is scalar @products,  11, 'number of products';
+    is ref $products[0], 'DMM::Product', 'class of products returned';
+};
+
 done_testing;
