@@ -57,6 +57,8 @@ sub set_information {
 
     if ($media eq 'dvd') {
         $self->_parse_dvd;
+    } elsif ($media eq 'download') {
+        $self->_parse_download;
     }
 }
 
@@ -65,6 +67,7 @@ sub _product_url {
 
     my %format = (
         dvd => 'http://www.dmm.co.jp/mono/dvd/-/detail/=/cid=%s/',
+        download => 'http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=%s/',
     );
 
     sprintf $format{$media}, $self->{id};
@@ -81,6 +84,13 @@ sub _get_content_ref {
     return \$res->decoded_content;
 }
 
+my $product_info = scraper {
+    process q{//meta[contains(@property, 'og:title')}, title => '@content';
+    process q{//meta[contains(@property, 'og:url')},   link  => '@content';
+    process q{//meta[contains(@property, 'og:image')}, image => '@content';
+    process q{//meta[contains(@property, 'og:description')}, description => '@content';
+};
+
 sub _parse_dvd {
     my $self = shift;
 
@@ -92,12 +102,55 @@ sub _parse_dvd {
         push @info, $1;
     }
 
-    my $product_info = scraper {
-        process q{//meta[contains(@property, 'og:title')}, title => '@content';
-        process q{//meta[contains(@property, 'og:url')},   link  => '@content';
-        process q{//meta[contains(@property, 'og:image')}, image => '@content';
-        process q{//meta[contains(@property, 'og:description')}, description => '@content';
-    };
+    $self->{release_date} = _parse_date($info[0]);
+    $self->{minutes}      = _parse_minutes($info[1]);
+    $self->{actresses}    = _extract_a_tag($info[2]);
+    $self->{director}     = _extract_a_tag($info[3]);
+    $self->{series}       = _extract_a_tag($info[4]);
+    $self->{maker}        = _extract_a_tag($info[5]);
+    $self->{label}        = _extract_a_tag($info[6]);
+    $self->{genre}        = _extract_a_tag($info[7]);
+
+    $self->_set_from_metadata( $content_ref );
+}
+
+sub _parse_download {
+    my $self = shift;
+
+    my $url = $self->{link} || $self->_product_url('download');
+    my $content_ref = _get_content_ref($url);
+
+    my $regexp = qr{
+                       <td \s align="right" \s valign="top" \s class="nw">
+                       \s*
+                       [^<]+
+                       </td>
+                       \s*
+                       <td>
+                       \s*
+                       (.+?)
+                       </td>
+               }xms;
+
+    my @info;
+    while ($$content_ref =~ m{$regexp}gxms) {
+        push @info, $1;
+    }
+
+    $self->{release_date} = _parse_date($info[1]);
+    $self->{minutes}      = _parse_minutes($info[3]);
+    $self->{actresses}    = _extract_a_tag($info[4]);
+    $self->{director}     = _extract_a_tag($info[5]);
+    $self->{series}       = _extract_a_tag($info[6]);
+    $self->{maker}        = _extract_a_tag($info[7]);
+    $self->{label}        = _extract_a_tag($info[8]);
+    $self->{genre}        = _extract_a_tag($info[9]);
+
+    $self->_set_from_metadata( $content_ref );
+}
+
+sub _set_from_metadata {
+    my ($self, $content_ref) = @_;
 
     my $res = $product_info->scrape( $$content_ref );
     $self->{title} = $res->{title};
@@ -107,15 +160,6 @@ sub _parse_dvd {
     (my $package = $res->{image}) =~ s{ps\.jpg}{pl\.jpg};
     $self->{package} = $package;
     $self->{description} = $res->{description};
-
-    $self->{release_date} = _parse_date($info[0]);
-    $self->{minutes}      = _parse_minutes($info[1]);
-    $self->{actresses}    = _extract_a_tag($info[2]);
-    $self->{director}     = _extract_a_tag($info[3]);
-    $self->{series}       = _extract_a_tag($info[4]);
-    $self->{maker}        = _extract_a_tag($info[5]);
-    $self->{label}        = _extract_a_tag($info[6]);
-    $self->{genre}        = _extract_a_tag($info[7]);
 }
 
 sub _parse_date {
@@ -130,7 +174,7 @@ sub _parse_date {
 sub _parse_minutes {
     my $minutes_str = shift;
 
-    $minutes_str =~ s{分$}{};
+    $minutes_str =~ s{分.*\z}{}xms;
     $minutes_str;
 }
 

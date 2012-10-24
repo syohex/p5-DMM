@@ -35,7 +35,7 @@ subtest 'accessor' => sub {
     }
 };
 
-subtest 'collect from id' => sub {
+subtest 'collect from id(dvd)' => sub {
     diag("'Infomation of http://www.dmm.co.jp/mono/dvd/-/detail/=/cid=53dv1434/'");
     my $product = DMM::Product->create_from_id(id => '53dv1434', media => 'dvd');
 
@@ -43,6 +43,17 @@ subtest 'collect from id' => sub {
     is $product->minutes, 120, 'minutes is set';
     ok $product->link, 'link is set';
     ok $product->description, 'description is set';
+};
+
+subtest 'collect from id(download)' => sub {
+    diag("'Infomation of http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=kawd00403/");
+    my $product = DMM::Product->create_from_id(id => 'kawd00403', media => 'download');
+
+    is $product->title, '新人！kawaii*専属デビュ→ スタアの順番☆ ほのか美空', 'title is set';
+    is $product->minutes, 139, 'minutes is set';
+    ok $product->link, 'link is set';
+    ok $product->description, 'description is set';
+    is scalar @{$product->genre}, 8, 'genre is 8';
 };
 
 done_testing;
