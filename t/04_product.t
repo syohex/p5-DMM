@@ -36,7 +36,7 @@ subtest 'accessor' => sub {
 };
 
 subtest 'collect from id(dvd)' => sub {
-    diag("'Infomation of http://www.dmm.co.jp/mono/dvd/-/detail/=/cid=53dv1434/'");
+    diag("'Information of http://www.dmm.co.jp/mono/dvd/-/detail/=/cid=53dv1434/'");
     my $product = DMM::Product->create_from_id(id => '53dv1434', media => 'dvd');
 
     is $product->title, '新人×アリスJAPAN 巨乳美白パーフェクトボディ 知花メイサ', 'title is set';
@@ -46,7 +46,7 @@ subtest 'collect from id(dvd)' => sub {
 };
 
 subtest 'collect from id(download)' => sub {
-    diag("'Infomation of http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=kawd00403/");
+    diag("'Information of http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=kawd00403/");
     my $product = DMM::Product->create_from_id(id => 'kawd00403', media => 'download');
 
     is $product->title, '新人！kawaii*専属デビュ→ スタアの順番☆ ほのか美空', 'title is set';

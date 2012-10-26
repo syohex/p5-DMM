@@ -115,7 +115,7 @@ __END__
 
 =head1 NAME
 
-DMM::Ranking::Actress - DMM acttress ranking module
+DMM::Ranking::Actress - DMM actress ranking module
 
 =head1 SYNOPSIS
 
